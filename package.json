@@ -1,0 +1,23 @@
+{
+  "name": "litenovel-downloader",
+  "version": "1.0.0",
+  "description": "A script that that finds and downloads light novels from WuxiaWorld and generates a webpage with tools to improve the reading experience.",
+  "main": "litenovel-downloader.js",
+  "dependencies": {
+    "jsdom": "^15.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node litenovel-downloader.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodrigohpalmeirim/litenovel-downloader.git"
+  },
+  "author": "Rodrigo Palmeirim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rodrigohpalmeirim/litenovel-downloader/issues"
+  },
+  "homepage": "https://github.com/rodrigohpalmeirim/litenovel-downloader#readme"
+}
