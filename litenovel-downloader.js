@@ -72,7 +72,7 @@ function confirm() {
             console.log("No? Oh, that's a shame! Let's try again!\n");
             query();
         } else {
-            console.log("Wtf?");
+            console.log("Excuse me, wtf?");
             confirm();
         }
     });
@@ -358,25 +358,27 @@ function getNextChapter() {
 
                 // Append chapter to file
                 fs.appendFile(fileName, chapterContent, function(err) {
-                    if(err) {
-                        return console.log(err);
-                    } else {
-                        chapterCount++;
-                        getNextChapter();
-                    }
-                });
-            } catch (err) {
-                // Append the end of the file
-                fs.appendFile(fileName, pageEnd, function(err) {
                     if(err)
                         return console.log(err);
-                    clearLine();
-                    console.log("Saved to "+fileName);
+                    chapterCount++;
+                    getNextChapter();
                 });
+            } catch (err) {
+                appendEnd();
             }
-        } else {
+        } else if (error.code = "ENOTFOUND")
+            appendEnd();
+        else
             console.log(error);
-        }
+    });
+}
+
+function appendEnd() {
+    fs.appendFile(fileName, pageEnd, function(err) {
+        if(err)
+            return console.log(err);
+        clearLine();
+        console.log("Saved to "+fileName);
     });
 }
 
