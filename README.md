@@ -43,3 +43,10 @@ To run the script use:
 ```
 node litenovel-downloader.js
 ```
+<br/>
+
+# Updating
+To update the script run the following command on the directory where it's installed:
+```
+git pull
+```
