@@ -7,10 +7,21 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-query();
+queryURL();
 
 var novelUrl;
-function query() {
+function queryURL() {
+    rl.question("What's the URL for the novel?\n", function(input) {
+        if (/https:\/\/www\.wuxiaworld\.com\/novel\/.+$/.test(input)) {
+            novelUrl = input.match(/https:\/\/www\.wuxiaworld.com\/novel\/[^\/]+/)[0];
+            getInfo();
+        } else {
+            console.log("That is not a valid WuxiaWorld URL.");
+            queryURL();
+        }
+    });
+}
+/* function query() {
     rl.question("What's the name of the novel?\n", function(input) {
         process.stdout.write("Searching...");
         request({uri: "https://www.google.com/search?q="+input.replace(" ", "%20")+"%20site:wuxiaworld.com"}, function(error, response, body) {
@@ -39,7 +50,7 @@ function query() {
             }
         });
     });
-}
+} */
 
 var novelTitle;
 var chapterAmount;
@@ -51,13 +62,16 @@ function getInfo() {
             var dom = new JSDOM(body);
             var novelPage = dom.window.document;
 
+            console.log("Alright!");
+
             novelTitle = novelPage.getElementsByClassName("panel")[0].getElementsByTagName("h4")[0].textContent;
             chapterAmount = novelPage.getElementsByClassName("chapter-item").length;
             chapterUrl = "https://www.wuxiaworld.com"+novelPage.getElementsByClassName("chapter-item")[0].getElementsByTagName("a")[0].href;
             
             confirm();
         } else {
-            console.log(error);
+            console.log("That page does not exist.");
+            queryURL();
         }
     });
 }
@@ -69,8 +83,8 @@ function confirm() {
             rl.close();
             start();
         } else if (/^(n|N)/.test(input)) {
-            console.log("No? Oh, that's a shame! Let's try again!\n");
-            query();
+            console.log("No? Hmm... Let's try again!");
+            queryURL();
         } else {
             console.log("Excuse me, wtf?");
             confirm();
@@ -331,7 +345,7 @@ function getNextChapter() {
             var chapterPage = dom.window.document;
             
             try {
-                var chapterTitle = chapterPage.getElementsByClassName("panel")[0].getElementsByTagName("h4")[0].innerHTML;
+                var chapterTitle = chapterPage.querySelector(".panel-default h4").innerHTML;
                 var bookReference = chapterTitle.match(/((Book )|(Volume )|(Vol ))\d+/);
                 var chapterReference = chapterTitle.match(/Chapter (\d+([\.-]\w+)?)/);
                 clearLine();
@@ -353,8 +367,7 @@ function getNextChapter() {
                 for (var i=0; chapterPage.getElementsByClassName("chapter-nav").length; i++)
                     chapterPage.getElementsByClassName("chapter-nav")[0].remove();
 
-                // Hide all chapters
-                var chapterContent = `<div class="chapter" style="display: none">` + chapterPage.getElementsByClassName("fr-view")[0].innerHTML + `</div>`
+                var chapterContent = `<div class="chapter" style="display: none">` + chapterPage.querySelector(".panel-default .fr-view").innerHTML + `</div>`
 
                 // Append chapter to file
                 fs.appendFile(fileName, chapterContent, function(err) {
